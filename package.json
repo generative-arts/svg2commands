@@ -1,0 +1,53 @@
+{
+  "name": "@generative-arts/svg2commands",
+  "version": "0.0.1",
+  "description": "Convert SVGs into readable Objects for post-processing",
+  "keywords": [
+    "svg",
+    "convert",
+    "image",
+    "processing"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/generative-arts/svg2commands"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "start": "ts-node ./src/index.ts",
+    "build": "tsc --p tsconfig.json",
+    "dist": "node dist/index.js",
+    "test": "jest --config jest.config.js --runInBand true"
+  },
+  "author": "adam.urban@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "svg-parser": "^2.0.4",
+    "uuid": "^8.2.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.7",
+    "@types/jasmine": "^3.5.11",
+    "@types/jest": "^26.0.4",
+    "@types/node": "^14.0.20",
+    "@typescript-eslint/eslint-plugin": "^3.6.0",
+    "@typescript-eslint/parser": "^3.6.0",
+    "eslint": "^7.4.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "jest": "^26.1.0",
+    "node-mocks-http": "^1.8.1",
+    "nyc": "^15.1.0",
+    "prettier": "2.0.5",
+    "ts-jest": "^26.1.1",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.2"
+  }
+}
