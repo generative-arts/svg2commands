@@ -6,7 +6,7 @@ const fileName = 'DIRECTORY'
 async function run() {
   const svg = await SvgReaderController.read(fileName)
   const parsed = ParserController.parse(svg)
-  console.log(parsed)
+  console.log(parsed.dimensions)
 }
 
 run()

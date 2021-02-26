@@ -1,15 +1,25 @@
 /* eslint-disable id-length */
+import { Dimensions } from 'types/Dimensions.type'
 import { Commands } from '../enums/Commands.enum'
 import { ElementType } from '../enums/ElementType.enum'
 import { SvgTagName, SvgType } from '../enums/SVG.enum'
 import { Coordinate } from '../types/Coordinate.type'
 import { Element } from '../types/Element.type'
+import { ParseResult } from '../types/ParseResult.type'
 
 export class ParserController {
-  public static parse(svg: any): Element[] {
+  public static parse(svg: any): ParseResult {
     const elements: Element[] = []
+    const dimensions: Dimensions = {
+      width: 0,
+      height: 0,
+    }
     if (svg.type === SvgType.ROOT) {
       for (const rootChild of svg.children) {
+        if (rootChild.tagName === SvgTagName.SVG && rootChild.properties) {
+          dimensions.width = rootChild.properties.width
+          dimensions.height = rootChild.properties.height
+        }
         if (rootChild.children) {
           for (const child of rootChild.children) {
             if (child.tagName === SvgTagName.PATH) {
@@ -19,7 +29,7 @@ export class ParserController {
         }
       }
     }
-    return elements
+    return { elements, dimensions }
   }
 
   public static parsePath(path: string): Element[] {
