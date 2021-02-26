@@ -4,4 +4,5 @@ export enum SvgType {
 
 export enum SvgTagName {
   PATH = 'path',
+  SVG = 'svg',
 }
