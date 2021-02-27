@@ -1,24 +1,38 @@
 /* eslint-disable id-length */
-import { Dimensions } from 'types/Dimensions.type'
 import { Commands } from '../enums/Commands.enum'
 import { ElementType } from '../enums/ElementType.enum'
 import { SvgTagName, SvgType } from '../enums/SVG.enum'
 import { Coordinate } from '../types/Coordinate.type'
+import { Dimensions } from '../types/Dimensions.type'
 import { Element } from '../types/Element.type'
+import { ParseConfig } from '../types/ParseConfig.type'
 import { ParseResult } from '../types/ParseResult.type'
 
+interface PathConfig {
+  path: string
+  resizeRatio?: number
+}
+
 export class ParserController {
-  public static parse(svg: any): ParseResult {
+  public static parse(config: ParseConfig): ParseResult {
     const elements: Element[] = []
     const dimensions: Dimensions = {
       width: 0,
       height: 0,
     }
-    if (svg.type === SvgType.ROOT) {
-      for (const rootChild of svg.children) {
+    if (config.svg.type === SvgType.ROOT) {
+      for (const rootChild of config.svg.children) {
         if (rootChild.tagName === SvgTagName.SVG && rootChild.properties) {
           dimensions.width = rootChild.properties.width
           dimensions.height = rootChild.properties.height
+        }
+        let resizeRatio: number
+        if (config.resize) {
+          if (config.resize.width) {
+            resizeRatio = 1 / (config.resize.width / dimensions.width)
+          } else if (config.resize.height) {
+            resizeRatio = 1 / (config.resize.height / dimensions.height)
+          }
         }
         if (rootChild.children) {
           for (const child of rootChild.children) {
@@ -32,8 +46,8 @@ export class ParserController {
     return { elements, dimensions }
   }
 
-  public static parsePath(path: string): Element[] {
-    const splitted = path.split(' ')
+  public static parsePath(config: PathConfig): Element[] {
+    const splitted = config.path.split(' ')
     const elements: Element[] = []
     let moveTo: Coordinate = { x: 0, y: 0 }
     let tempCoordinates: Coordinate[]
@@ -46,7 +60,8 @@ export class ParserController {
           moveTo = ParserController.nextElementsAsCoordinates(
             splitted,
             i,
-            tempCount
+            tempCount,
+            config.resizeRatio
           )[0]
           break
         case Commands.C:
@@ -54,7 +69,8 @@ export class ParserController {
           tempCoordinates = ParserController.nextElementsAsCoordinates(
             splitted,
             i,
-            tempCount
+            tempCount,
+            config.resizeRatio
           )
           elements.push({
             start: moveTo,
@@ -72,7 +88,8 @@ export class ParserController {
           tempCoordinates = ParserController.nextElementsAsCoordinates(
             splitted,
             i,
-            tempCount
+            tempCount,
+            config.resizeRatio
           )
           elements.push({
             start: moveTo,
@@ -86,7 +103,8 @@ export class ParserController {
           tempCoordinates = ParserController.nextElementsAsCoordinates(
             splitted,
             i,
-            tempCount
+            tempCount,
+            config.resizeRatio
           )
           elements.push({
             start: moveTo,
@@ -125,7 +143,8 @@ export class ParserController {
   private static nextElementsAsCoordinates(
     splitted: string[],
     index: number,
-    count: number
+    count: number,
+    resizeRatio?: number
   ): Coordinate[] {
     const values = ParserController.nextElementsAsNumbers(
       splitted,
@@ -138,8 +157,8 @@ export class ParserController {
     const coordinates: Coordinate[] = []
     for (let i = 0; i < values.length; i += 2) {
       coordinates.push({
-        x: values[i],
-        y: values[i + 1],
+        x: resizeRatio ? resizeRatio * values[i] : values[i],
+        y: resizeRatio ? resizeRatio * values[i + 1] : values[i + 1],
       })
     }
     return coordinates
