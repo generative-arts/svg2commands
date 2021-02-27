@@ -29,10 +29,14 @@ export class ParserController {
         let resizeRatio: number
         if (config.resize) {
           if (config.resize.width) {
-            resizeRatio = 1 / (config.resize.width / dimensions.width)
+            resizeRatio = 1 / (dimensions.width / config.resize.width)
           } else if (config.resize.height) {
-            resizeRatio = 1 / (config.resize.height / dimensions.height)
+            resizeRatio = 1 / (dimensions.height / config.resize.height)
           }
+        }
+        if (resizeRatio) {
+          dimensions.width = dimensions.width * resizeRatio
+          dimensions.height = dimensions.height * resizeRatio
         }
         if (rootChild.children) {
           for (const child of rootChild.children) {
