@@ -1,6 +1,6 @@
 {
   "name": "@generative-arts/svg2commands",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Convert SVGs into readable Objects for post-processing",
   "keywords": [
     "svg",
