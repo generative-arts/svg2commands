@@ -37,7 +37,12 @@ export class ParserController {
         if (rootChild.children) {
           for (const child of rootChild.children) {
             if (child.tagName === SvgTagName.PATH) {
-              elements.push(...ParserController.parsePath(child.properties.d))
+              elements.push(
+                ...ParserController.parsePath({
+                  path: child.properties.d,
+                  resizeRatio,
+                })
+              )
             }
           }
         }
